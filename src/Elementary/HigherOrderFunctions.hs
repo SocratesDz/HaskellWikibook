@@ -7,7 +7,9 @@ usual = compare
 
 descending x y = compare y x
 
-insensitive x y = compare (toLower x) (toLower y)
+insensitive :: [Char] -> [Char] -> Ordering
+insensitive x y = compare (toLower' x) (toLower' y)
+  where toLower' = map toLower
 
 quickSort' :: (Ord a) => (a -> a -> Ordering) -> [a] -> [a]
 quickSort' _ [] = []
@@ -19,7 +21,7 @@ quickSort' c (x : xs) = (quickSort' c less) ++ (x : equal) ++ (quickSort' c more
 
 for :: a -> (a -> Bool) -> (a -> a) -> (a -> IO ()) -> IO ()
 for i p f job
-  | p i = return ()
+  | (not . p) i = return ()
   | otherwise = do 
       job i
       for (f i) p f job
